@@ -25,7 +25,7 @@ public class LightReactionTest : MonoBehaviour
         _dissolveScript = gameObject.GetComponent<Dissolve>();
         col = GetComponent<BoxCollider>();
         particles = GetComponentInChildren<ParticleSystem>();
-        HandleParticleSystemSize(col);
+        //HandleParticleSystemSize(col);
     }
 
     private void Start()
@@ -146,59 +146,55 @@ public class LightReactionTest : MonoBehaviour
             }
     }
 
+    private Color _previousColor;
     private void HandleParticleColor()
     {
         var main = particles.main;
+        Color newColor = main.startColor.color; // Default to current color
 
-        //maybe better to have a function to detect what color hitting now, and then save
-        //the color that is hitting and use it in particle system and in existing
         switch (colorsHittingNow)
         {
             case var _ when colorsHittingNow.Count == 0 && !_objectInCollider:
-                particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                break;
+                particles.Stop();
+                _previousColor = Color.clear; // Track no color situation
+                return;
 
-            case var _ when colorsHittingNow.Contains(LanternColor.Red) && colorsHittingNow.Count == 1:              
-                main.startColor = Color.red;
-                if(!particles.isEmitting)
-                particles.Play();
+            case var _ when colorsHittingNow.Contains(LanternColor.Red) && colorsHittingNow.Count == 1:
+                newColor = Color.red;
                 break;
 
             case var _ when colorsHittingNow.Contains(LanternColor.Blue) && colorsHittingNow.Count == 1:
-                main.startColor = Color.blue;
-                if (!particles.isEmitting)
-                    particles.Play();
+                newColor = Color.blue;
                 break;
 
             case var _ when colorsHittingNow.Contains(LanternColor.Yellow) && colorsHittingNow.Count == 1:
-                main.startColor = Color.yellow;
-                if (!particles.isEmitting)
-                    particles.Play();
+                newColor = Color.yellow;
                 break;
 
             case var _ when colorsHittingNow.Contains(LanternColor.Yellow) && colorsHittingNow.Contains(LanternColor.Red) && colorsHittingNow.Count == 2:
-                main.startColor = new Color(1f, 0.6745098f, 0.1098039f, 1f); //orange
-                if (!particles.isEmitting)
-                    particles.Play();
+                newColor = new Color(1f, 0.4447487f, 0, 1f); // Orange
                 break;
 
             case var _ when colorsHittingNow.Contains(LanternColor.Blue) && colorsHittingNow.Contains(LanternColor.Red) && colorsHittingNow.Count == 2:
-                main.startColor = new Color(0.7490196f, 0.2509804f, 0.7490196f, 1f ); // purple
-                if (!particles.isEmitting)
-                particles.Play();
+                newColor = new Color(0.7490196f, 0.2509804f, 0.7490196f, 1f); // Purple
                 break;
 
             case var _ when colorsHittingNow.Contains(LanternColor.Yellow) && colorsHittingNow.Contains(LanternColor.Blue) && colorsHittingNow.Count == 2:
-                main.startColor = Color.green;
-                if (!particles.isEmitting)
-                    particles.Play();
+                newColor = Color.green;
                 break;
 
-            case var _ when  colorsHittingNow.Count == 3: //only way it can be 3 is if all colors are hitting
-                main.startColor = Color.white;
-                if (!particles.isEmitting)
-                    particles.Play();
+            case var _ when colorsHittingNow.Count == 3: // All colors hitting
+                newColor = Color.white;
                 break;
+        }
+
+        // Check if the color has changed
+        if (newColor != _previousColor)
+        {
+            particles.Clear(); // Remove old particles
+            main.startColor = newColor;
+            particles.Play();
+            _previousColor = newColor; // Update previous color
         }
     }
 
