@@ -28,6 +28,14 @@ PrefabInstance:
       propertyPath: colorNeeded
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 2091087298454537636, guid: be4f374ce0298844bb82d7d7451abb64, type: 3}
+      propertyPath: _colorNeeded
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2091087298454537636, guid: be4f374ce0298844bb82d7d7451abb64, type: 3}
+      propertyPath: ObjectInCollider
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6361435593282761175, guid: be4f374ce0298844bb82d7d7451abb64, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.59

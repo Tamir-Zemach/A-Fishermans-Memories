@@ -70,8 +70,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad39144aca44d2546827e7adfa607ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorNeeded: 3
-  _objectInCollider: 0
+  _colorNeeded: 3
+  ObjectInCollider: 0
 --- !u!114 &-7224453985505509178
 MonoBehaviour:
   m_ObjectHideFlags: 0

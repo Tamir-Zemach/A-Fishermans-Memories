@@ -1,14 +1,15 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CheckForPickables : MonoBehaviour
 {
     [Header("Ray Params")]
-    public GameObject _rayStartPos;
-    public float _rayLength = 0.9f;
-    public RaycastHit _hitInfo;
-    public LayerMask ignoreRaycastLayer;
+    public GameObject RayStartPos;
+    public float RayLength = 5.5f;
+    public RaycastHit HitInfo;
+    [FormerlySerializedAs("ignoreRaycastLayer")] public LayerMask IgnoreRaycastLayer;
 
     [Header("Input Text")]
     [SerializeField] private TextMeshPro _textToAppear;
@@ -20,15 +21,15 @@ public class CheckForPickables : MonoBehaviour
 
     private Vector3 _screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
     [HideInInspector] public bool _isHoldingObj;
+    private int lastScreenWidth;
+    private int lastScreenHeight;
     
 
     [Header("Input Buffer")]
     [SerializeField] private float bufferTime = 0.5f;
     private bool canPressDrop = true;
 
-
-
-    //TODO: add an ignore layer for invisible colliders
+    
 
     private void Awake()
     {
@@ -37,8 +38,17 @@ public class CheckForPickables : MonoBehaviour
         _outlineHandler = gameObject.GetComponent<OutlineHandler>();
         _textToAppear = gameObject.transform.GetComponentInChildren<TextMeshPro>();
     }
+
+
     private void Update()
     {
+        if (Screen.width != lastScreenWidth || Screen.height != lastScreenHeight)
+        {
+            _screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+            lastScreenWidth = Screen.width;
+            lastScreenHeight = Screen.height;
+        }
+
         CheckingForPickupsWithRay();
         HandleDropPickup();
     }
@@ -47,7 +57,7 @@ public class CheckForPickables : MonoBehaviour
         if (IsObjectPickable() && !_isHoldingObj)
         {
             _outlineHandler.ShowPickupVisibleHint();
-            _outlineHandler._currentOutLine = _hitInfo.collider.GetComponent<Outline>();
+            _outlineHandler._currentOutLine = HitInfo.collider.GetComponent<Outline>();
             _textToAppear.enabled = true;
             HandlePickup();
         }
@@ -61,10 +71,10 @@ public class CheckForPickables : MonoBehaviour
     {
 
         Ray ray = _camera.ScreenPointToRay(_screenCenter);
-        Debug.DrawRay(ray.origin, ray.direction * _rayLength, Color.red);
-        if (Physics.Raycast(ray, out _hitInfo, _rayLength, ~ignoreRaycastLayer))
+        Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.red);
+        if (Physics.Raycast(ray, out HitInfo, RayLength, ~IgnoreRaycastLayer))
         {
-            if (_hitInfo.transform.GetComponent<LightScript>() != null)
+            if (HitInfo.transform.GetComponent<LightScript>() != null)
             {
                 return true;
             }

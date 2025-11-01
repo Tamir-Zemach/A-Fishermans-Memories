@@ -38,7 +38,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DepthOffset: 30.25
+    - _DepthOffset: 0
     - _DistortionStrength: 1.17
     - _FrenselPower: 0.76
     - _QueueControl: 1

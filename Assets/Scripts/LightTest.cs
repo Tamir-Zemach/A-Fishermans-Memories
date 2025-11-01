@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Walls;
 
 public class LightScript : MonoBehaviour
 {
@@ -14,8 +15,8 @@ public class LightScript : MonoBehaviour
     private Material[] materials;
     private Color defaultEmission;
 
-    private LightReactionTest currentHitLightReactionScript;
-    //private LightReactionTest lightReactionScriptHitBySphere;
+    private ColorReactiveWall currentHitLightReactionScript;
+    //private ColorReactiveWall lightReactionScriptHitBySphere;
     private Light[] VisualLights;
 
     private SphereCollider OverlapSphere;
@@ -75,7 +76,7 @@ public class LightScript : MonoBehaviour
     {
         if (this.enabled)
         {
-            var lightReactionScript = other.GetComponent<LightReactionTest>();
+            var lightReactionScript = other.GetComponent<ColorReactiveWall>();
             lightReactionScript?.AddColorToList(lanternColor);
         }
     }
@@ -84,7 +85,7 @@ public class LightScript : MonoBehaviour
     {
         if (this.enabled)
         {
-            var lightReactionScript = other.GetComponent<LightReactionTest>();
+            var lightReactionScript = other.GetComponent<ColorReactiveWall>();
             lightReactionScript?.AddColorToList(lanternColor);
         }
     }
@@ -93,7 +94,7 @@ public class LightScript : MonoBehaviour
     {
         if (this.enabled)
         {
-            var lightReactionScript = other.GetComponent<LightReactionTest>();
+            var lightReactionScript = other.GetComponent<ColorReactiveWall>();
             lightReactionScript?.RemoveColorFromList(lanternColor);
         }
 
@@ -137,7 +138,7 @@ public class LightScript : MonoBehaviour
         {
             var hitObject = hitInfo.transform;
 
-            hitObject.TryGetComponent<LightReactionTest>(out currentHitLightReactionScript);
+            hitObject.TryGetComponent<ColorReactiveWall>(out currentHitLightReactionScript);
 
             currentHitLightReactionScript?.AddColorToList(lanternColor);
         }

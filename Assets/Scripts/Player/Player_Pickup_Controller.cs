@@ -49,7 +49,7 @@ public class Player_Pickup_Controller : MonoBehaviour
     private void AttachPickedUpObject()
     {
         lockRotation = true;
-        _objectThatGotPickedUp = _checkForPickables._hitInfo.transform.gameObject;
+        _objectThatGotPickedUp = _checkForPickables.HitInfo.transform.gameObject;
         _objectRigidbody = _objectThatGotPickedUp.GetComponent<Rigidbody>();
         _objectRigidbody.constraints = RigidbodyConstraints.FreezeAll;
         Transform objectTransform = _objectThatGotPickedUp.transform;

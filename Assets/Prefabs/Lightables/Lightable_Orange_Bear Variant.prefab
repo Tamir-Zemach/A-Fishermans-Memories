@@ -146,6 +146,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 984839681684090740, guid: f8b28cfa15ef1a7458df22c9a8a2bdf3, type: 3}
+      propertyPath: _colorNeeded
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1437212360096829440, guid: f8b28cfa15ef1a7458df22c9a8a2bdf3, type: 3}
       propertyPath: m_Name
       value: Lightable_Orange_Bear Variant

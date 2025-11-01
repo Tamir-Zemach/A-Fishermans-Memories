@@ -1,53 +1,58 @@
-using System.Xml.Serialization;
 using UnityEngine;
 
-public class PauseButton : MonoBehaviour
+namespace UI
+
 {
-    private UIFunctions _uIFunctions;
-
-    public bool _pressedPauseButton;
-    public bool _inStartCanvas;
-    private void Awake()
+    public class PauseButton : MonoBehaviour
     {
-        _uIFunctions = GetComponent<UIFunctions>();
-        _pressedPauseButton = true;
-        _inStartCanvas = true;
-    }
+        private UIFunctions _uIFunctions;
 
-    void Update()
-    {
+        public KeyCode PauseKey = KeyCode.P;
 
-        if (!_inStartCanvas)
+        public bool _pressedPauseButton;
+        public bool _inStartCanvas;
+        private void Awake()
         {
-            if (!_pressedPauseButton)
+            _uIFunctions = GetComponent<UIFunctions>();
+            _pressedPauseButton = true;
+            _inStartCanvas = true;
+        }
+
+        void Update()
+        {
+
+            if (!_inStartCanvas)
             {
-                GetInput();
+                if (!_pressedPauseButton)
+                {
+                    GetInput();
+                }
+                else
+                {
+                    GetInputWhilePaused();
+                }
             }
-            else
+
+        }
+
+
+        private void GetInput()
+        {
+            if (Input.GetKeyDown(PauseKey))
             {
-                GetInputWhilePaused();
+                _uIFunctions.PauseGame();
             }
         }
 
-    }
-
-
-    private void GetInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        private void GetInputWhilePaused()
         {
-            _uIFunctions.PauseGame();
+            if (Input.GetKeyDown(PauseKey) )
+            {
+                _uIFunctions.Continue();
+            }
         }
+
+
+
     }
-
-    private void GetInputWhilePaused()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) )
-        {
-            _uIFunctions.Continue();
-        }
-    }
-
-
-
 }

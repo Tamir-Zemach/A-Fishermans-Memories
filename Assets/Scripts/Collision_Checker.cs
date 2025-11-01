@@ -1,26 +1,27 @@
 using UnityEngine;
+using Walls;
 
 public class Collision_Checker : MonoBehaviour
 {
-    private LightReactionTest _lightReactionTest;
+    private ColorReactiveWall _colorReactiveWall;
 
     private void OnTriggerStay(Collider other)
     {
 
-        if (other.gameObject.TryGetComponent<LightReactionTest>(out var component))
+        if (other.gameObject.TryGetComponent<ColorReactiveWall>(out var component))
         {
-            _lightReactionTest = component;
-            component._objectInCollider = true;
+            _colorReactiveWall = component;
+            component.ObjectInCollider = true;
         }
 
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent<LightReactionTest>(out var component))
+        if (other.gameObject.TryGetComponent<ColorReactiveWall>(out var component))
         {
-            _lightReactionTest = component;
-            component._objectInCollider = false;
-            _lightReactionTest = null;
+            _colorReactiveWall = component;
+            component.ObjectInCollider = false;
+            _colorReactiveWall = null;
         }
     }
 

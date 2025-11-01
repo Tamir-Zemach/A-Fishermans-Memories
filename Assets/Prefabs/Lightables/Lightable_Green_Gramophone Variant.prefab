@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7635458993510510367, guid: 9ec8d523ac3ee5047b46202971ebf09a, type: 3}
+      propertyPath: _colorNeeded
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8623903995827785835, guid: 9ec8d523ac3ee5047b46202971ebf09a, type: 3}
       propertyPath: m_Name
       value: Lightable_Green_Gramophone Variant
