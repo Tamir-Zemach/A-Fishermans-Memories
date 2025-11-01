@@ -3,119 +3,110 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class CheckForPickables : MonoBehaviour
+namespace Player
 {
-    [Header("Ray Params")]
-    public GameObject RayStartPos;
-    public float RayLength = 5.5f;
-    public RaycastHit HitInfo;
-    [FormerlySerializedAs("ignoreRaycastLayer")] public LayerMask IgnoreRaycastLayer;
+    public class CheckForPickables : MonoBehaviour
+    {
+        [Header("Ray Params")]
+        public float RayLength = 5.5f;
+        public RaycastHit HitInfo;
+        public LayerMask IgnoreRaycastLayer;
 
-    [Header("Input Text")]
-    [SerializeField] private TextMeshPro _textToAppear;
+        [Header("Input Text")]
+        [SerializeField] private TextMeshPro _textToAppear;
 
 
-    private OutlineHandler _outlineHandler;
-    private Player_Pickup_Controller _pickupController;
-    private Camera _camera;
+        private OutlineHandler _outlineHandler;
+        private PlayerPickupController _pickupController;
+        private Camera _camera;
 
-    private Vector3 _screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-    [HideInInspector] public bool _isHoldingObj;
-    private int lastScreenWidth;
-    private int lastScreenHeight;
+        private Vector3 _screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        [HideInInspector] public bool IsHoldingObj;
+        private int _lastScreenWidth;
+        private int _lastScreenHeight;
+    
+        
+        [Header("Input Buffer")]
+        [SerializeField] private float _bufferTime = 0.5f;
+        private bool _canPressDrop = true;
+
     
 
-    [Header("Input Buffer")]
-    [SerializeField] private float bufferTime = 0.5f;
-    private bool canPressDrop = true;
-
-    
-
-    private void Awake()
-    {
-        _camera = Camera.main;
-        _pickupController = gameObject.GetComponent<Player_Pickup_Controller>();
-        _outlineHandler = gameObject.GetComponent<OutlineHandler>();
-        _textToAppear = gameObject.transform.GetComponentInChildren<TextMeshPro>();
-    }
-
-
-    private void Update()
-    {
-        if (Screen.width != lastScreenWidth || Screen.height != lastScreenHeight)
+        private void Awake()
         {
-            _screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-            lastScreenWidth = Screen.width;
-            lastScreenHeight = Screen.height;
+            _camera = Camera.main;
+            _pickupController = gameObject.GetComponent<PlayerPickupController>();
+            _outlineHandler = gameObject.GetComponent<OutlineHandler>();
+            _textToAppear = gameObject.transform.GetComponentInChildren<TextMeshPro>();
         }
 
-        CheckingForPickupsWithRay();
-        HandleDropPickup();
-    }
-    public void CheckingForPickupsWithRay()
-    {
-        if (IsObjectPickable() && !_isHoldingObj)
-        {
-            _outlineHandler.ShowPickupVisibleHint();
-            _outlineHandler._currentOutLine = HitInfo.collider.GetComponent<Outline>();
-            _textToAppear.enabled = true;
-            HandlePickup();
-        }
-        else
-        {
-            _outlineHandler.ResetHighlight();
-            _textToAppear.enabled = false;
-        }
-    }
-    public bool IsObjectPickable()
-    {
 
-        Ray ray = _camera.ScreenPointToRay(_screenCenter);
-        Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.red);
-        if (Physics.Raycast(ray, out HitInfo, RayLength, ~IgnoreRaycastLayer))
+        private void Update()
         {
-            if (HitInfo.transform.GetComponent<LightScript>() != null)
+            if (Screen.width != _lastScreenWidth || Screen.height != _lastScreenHeight)
             {
-                return true;
+                _screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+                _lastScreenWidth = Screen.width;
+                _lastScreenHeight = Screen.height;
+            }
+
+            CheckingForPickupsWithRay();
+            HandleDropPickup();
+        }
+
+        private void CheckingForPickupsWithRay()
+        {
+            if (IsObjectPickable() && !IsHoldingObj)
+            {
+                _outlineHandler.ShowPickupVisibleHint();
+                _outlineHandler._currentOutLine = HitInfo.collider.GetComponent<Outline>();
+                _textToAppear.enabled = true;
+                HandlePickup();
             }
             else
             {
-                return false;
+                _outlineHandler.ResetHighlight();
+                _textToAppear.enabled = false;
             }
         }
-        else
+
+        private bool IsObjectPickable()
         {
+
+            Ray ray = _camera.ScreenPointToRay(_screenCenter);
+            Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.red);
+            if (Physics.Raycast(ray, out HitInfo, RayLength, ~IgnoreRaycastLayer))
+            {
+                return HitInfo.transform.GetComponent<LightScript>() != null;
+            }
             return false;
+
         }
 
-    }
-    public void HandlePickup()
-    {
-        if (Input.GetKeyDown(KeyCode.E) && !_isHoldingObj && canPressDrop)
+        private void HandlePickup()
         {
+            if (!Input.GetKeyDown(KeyCode.E) || IsHoldingObj || !_canPressDrop) return;
             _pickupController.Pickup();
             _outlineHandler.ResetHighlight();
-            _isHoldingObj = true;
+            IsHoldingObj = true;
             StartCoroutine(InputBuffer());
-        }
 
-    }
-    private void HandleDropPickup()
-    {
-        if (_isHoldingObj && Input.GetKeyDown(KeyCode.E) && canPressDrop)
+        }
+        private void HandleDropPickup()
         {
+            if (!IsHoldingObj || !Input.GetKeyDown(KeyCode.E) || !_canPressDrop) return;
             _pickupController.DropPickup();
             _outlineHandler.ResetHighlight();
-            _isHoldingObj = false;
+            IsHoldingObj = false;
             StartCoroutine(InputBuffer());
         }
-    }
 
-    private IEnumerator InputBuffer()
-    {
-        canPressDrop = false;
-        yield return  new WaitForSeconds(bufferTime);
-        canPressDrop = true;
-    }
+        private IEnumerator InputBuffer()
+        {
+            _canPressDrop = false;
+            yield return  new WaitForSeconds(_bufferTime);
+            _canPressDrop = true;
+        }
 
+    }
 }

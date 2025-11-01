@@ -1,3 +1,4 @@
+using Player;
 using UnityEngine;
 
 public class PlayerAnimController : MonoBehaviour
@@ -24,11 +25,11 @@ public class PlayerAnimController : MonoBehaviour
 
     private void UpdateAnimationParameters()
     {
-        _animator.SetBool("isHolding", _checkForPickables._isHoldingObj);
+        _animator.SetBool("isHolding", _checkForPickables.IsHoldingObj);
     }
 
     private void ManageLayerWeight()
     {
-        _animator.SetLayerWeight(_handLayerIndex, _checkForPickables._isHoldingObj ? MaxWeight : MinWeight);
+        _animator.SetLayerWeight(_handLayerIndex, _checkForPickables.IsHoldingObj ? MaxWeight : MinWeight);
     }
 }

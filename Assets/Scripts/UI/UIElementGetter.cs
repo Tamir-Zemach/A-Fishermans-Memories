@@ -1,3 +1,4 @@
+using Player;
 using StarterAssets;
 using Unity.Cinemachine;
 using UnityEngine;

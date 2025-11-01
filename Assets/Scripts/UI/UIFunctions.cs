@@ -58,7 +58,7 @@ public class UIFunctions : MonoBehaviour
         _uiElementGetter._thirdPersonController._canMove = true;
         _uiElementGetter._pauseCanvas.enabled = false;
         _uiElementGetter._audioSettingsCanvas.enabled = false;
-        if (!_uiElementGetter._checkForPickables._isHoldingObj)
+        if (!_uiElementGetter._checkForPickables.IsHoldingObj)
         {
             _uiElementGetter._pickupCamera.enabled = false;
         }
